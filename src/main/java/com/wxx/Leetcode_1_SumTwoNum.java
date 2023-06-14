@@ -3,6 +3,7 @@ package com.wxx;
 import com.alibaba.fastjson.JSON;
 import com.wxx.base.BaseHandler;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,6 +73,8 @@ public class Leetcode_1_SumTwoNum extends BaseHandler {
 
     public static void main(String[] args) {
 //        new Leetcode_1_SumTwoNum().myResolve();
-        new Leetcode_1_SumTwoNum().bestResolve();
+//        new Leetcode_1_SumTwoNum().bestResolve();
+        Date date = new Date(1641816510L * 1000);
+        System.out.println(date);
     }
 }
