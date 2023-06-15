@@ -267,7 +267,6 @@ public class WorkLoadManager {
 				}
 				if(savePoint!=null){
 					conn.setAutoCommit(false);
-					savepoint = conn.setSavepoint();
 				}else{
 					conn.setAutoCommit(true);
 				}
@@ -308,6 +307,7 @@ public class WorkLoadManager {
 					int j2 = rates[2];
 					int j3 = rates[3];
 					while (j0 > 0 || j1 > 0 || j2 > 0 || j3 > 0) {
+						savepoint = conn.setSavepoint();
 						if (j0 > 0) {
 							if (startkey == endkey) {
 								endkey = ks.nextBufKey();
@@ -387,6 +387,8 @@ public class WorkLoadManager {
 					int randResult = random.nextInt(10);
 					if (randResult < 5 && savepoint != null) {
 						conn.rollback(savepoint);
+					} else {
+						conn.commit();
 					}
 				}
 				tm.calTotalInstTime(totalInstTime);
