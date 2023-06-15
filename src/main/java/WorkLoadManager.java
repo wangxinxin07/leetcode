@@ -238,7 +238,6 @@ public class WorkLoadManager {
 
 	public static class loadRunner extends Thread {
 		private Connection conn = null;
-		private Savepoint savepoint = null;
 		private PreparedStatement stmt_inst = null;
 		private PreparedStatement stmt_updt = null;
 		private PreparedStatement stmt_del = null;
@@ -306,8 +305,14 @@ public class WorkLoadManager {
 					int j1 = rates[1];
 					int j2 = rates[2];
 					int j3 = rates[3];
-					while (j0 > 0 || j1 > 0 || j2 > 0 || j3 > 0) {
+					//随机rollback savepoint
+					Random random = new Random();
+					int randResult = random.nextInt(10);
+					Savepoint savepoint = null;
+					if (randResult < 5){
 						savepoint = conn.setSavepoint();
+					}
+					while (j0 > 0 || j1 > 0 || j2 > 0 || j3 > 0) {
 						if (j0 > 0) {
 							if (startkey == endkey) {
 								endkey = ks.nextBufKey();
@@ -382,11 +387,9 @@ public class WorkLoadManager {
 						context = "";
 					}
 					i = i + 1;
-					//随机rollback savepoint
-					Random random = new Random();
-					int randResult = random.nextInt(10);
-					if (randResult < 5 && savepoint != null) {
+					if (savepoint != null) {
 						conn.rollback(savepoint);
+						conn.commit();
 					} else {
 						conn.commit();
 					}
